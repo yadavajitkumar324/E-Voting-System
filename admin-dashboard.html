@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SecureVote</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-page">
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+        <div class="sidebar-logo">
+            <span class="logo-icon">🗳️</span>
+            <span>SecureVote</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#dashboard" class="sidebar-link active" data-section="dashboard">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#voters" class="sidebar-link" data-section="voters">
+                <span class="icon">👥</span>
+                <span>Voters</span>
+            </a>
+            <a href="#candidates" class="sidebar-link" data-section="candidates">
+                <span class="icon">🎯</span>
+                <span>Candidates</span>
+            </a>
+            <a href="#results" class="sidebar-link" data-section="results">
+                <span class="icon">📈</span>
+                <span>Results</span>
+            </a>
+            <a href="#settings" class="sidebar-link" data-section="settings">
+                <span class="icon">⚙️</span>
+                <span>Settings</span>
+            </a>
+            <a href="index.html" class="sidebar-link logout">
+                <span class="icon">🚪</span>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+        <!-- Top Bar -->
+        <div class="admin-topbar">
+            <h2 id="pageTitle">Dashboard</h2>
+            <div class="admin-user">
+                <span>Admin User</span>
+                <div class="user-avatar">👨‍💼</div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div class="admin-section" id="dashboard-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <h3>Total Voters</h3>
+                        <p class="stat-value" id="totalVoters">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3>Votes Cast</h3>
+                        <p class="stat-value" id="totalVotes">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <h3>Voting Rate</h3>
+                        <p class="stat-value" id="votingRate">0%</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-info">
+                        <h3>Active Election</h3>
+                        <p class="stat-value">Presidential 2026</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h3>Real-time Vote Distribution</h3>
+                <div class="chart-container" id="chartContainer">
+                    <div class="chart-bar">
+                        <div class="bar-label">Alex Johnson</div>
+                        <div class="bar-wrapper">
+                            <div class="bar-fill" style="width: 25%;"></div>
+                        </div>
+                        <div class="bar-value" id="alex-votes">0</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-label">Sarah Williams</div>
+                        <div class="bar-wrapper">
+                            <div class="bar-fill" style="width: 30%;"></div>
+                        </div>
+                        <div class="bar-value" id="sarah-votes">0</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-label">Michael Chen</div>
+                        <div class="bar-wrapper">
+                            <div class="bar-fill" style="width: 20%;"></div>
+                        </div>
+                        <div class="bar-value" id="michael-votes">0</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="bar-label">Emma Rodriguez</div>
+                        <div class="bar-wrapper">
+                            <div class="bar-fill" style="width: 25%;"></div>
+                        </div>
+                        <div class="bar-value" id="emma-votes">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voters Section -->
+        <div class="admin-section" id="voters-section" style="display: none;">
+            <h3>Registered Voters</h3>
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="votersTable">
+                        <tr>
+                            <td>001</td>
+                            <td>John Doe</td>
+                            <td>john@example.com</td>
+                            <td><span class="badge badge-voted">Voted</span></td>
+                            <td><button class="btn btn-small">View</button></td>
+                        </tr>
+                        <tr>
+                            <td>002</td>
+                            <td>Jane Smith</td>
+                            <td>jane@example.com</td>
+                            <td><span class="badge badge-verified">Verified</span></td>
+                            <td><button class="btn btn-small">View</button></td>
+                        </tr>
+                        <tr>
+                            <td>003</td>
+                            <td>Bob Wilson</td>
+                            <td>bob@example.com</td>
+                            <td><span class="badge badge-voted">Voted</span></td>
+                            <td><button class="btn btn-small">View</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Candidates Section -->
+        <div class="admin-section" id="candidates-section" style="display: none;">
+            <div class="section-header">
+                <h3>Candidates</h3>
+                <button class="btn btn-primary" onclick="alert('Add Candidate Feature')">+ Add Candidate</button>
+            </div>
+            <div class="candidates-list">
+                <div class="candidate-item">
+                    <div class="candidate-avatar">👤</div>
+                    <div class="candidate-details">
+                        <h4>Alex Johnson</h4>
+                        <p>Democratic Party | Education & Healthcare Reform</p>
+                    </div>
+                    <div class="candidate-actions">
+                        <button class="btn btn-small">Edit</button>
+                        <button class="btn btn-small btn-danger">Delete</button>
+                    </div>
+                </div>
+                <div class="candidate-item">
+                    <div class="candidate-avatar">👤</div>
+                    <div class="candidate-details">
+                        <h4>Sarah Williams</h4>
+                        <p>Republican Party | Economic Growth & Tax Reform</p>
+                    </div>
+                    <div class="candidate-actions">
+                        <button class="btn btn-small">Edit</button>
+                        <button class="btn btn-small btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="admin-section" id="results-section" style="display: none;">
+            <h3>Election Results</h3>
+            <div class="results-detailed">
+                <div class="result-card">
+                    <div class="result-rank">1st</div>
+                    <div class="result-candidate">Sarah Williams</div>
+                    <div class="result-votes" id="result-votes-1">245 votes</div>
+                    <div class="result-percentage">35%</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-rank">2nd</div>
+                    <div class="result-candidate">Alex Johnson</div>
+                    <div class="result-votes" id="result-votes-2">210 votes</div>
+                    <div class="result-percentage">30%</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-rank">3rd</div>
+                    <div class="result-candidate">Emma Rodriguez</div>
+                    <div class="result-votes" id="result-votes-3">175 votes</div>
+                    <div class="result-percentage">25%</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-rank">4th</div>
+                    <div class="result-candidate">Michael Chen</div>
+                    <div class="result-votes" id="result-votes-4">70 votes</div>
+                    <div class="result-percentage">10%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div class="admin-section" id="settings-section" style="display: none;">
+            <h3>Settings</h3>
+            <form class="settings-form">
+                <div class="settings-group">
+                    <label>Election Name</label>
+                    <input type="text" value="Presidential Election 2026">
+                </div>
+                <div class="settings-group">
+                    <label>Election Status</label>
+                    <select>
+                        <option>Active</option>
+                        <option>Scheduled</option>
+                        <option>Completed</option>
+                    </select>
+                </div>
+                <div class="settings-group">
+                    <label>
+                        <input type="checkbox" checked> Enable Real-time Results
+                    </label>
+                </div>
+                <div class="settings-group">
+                    <label>
+                        <input type="checkbox" checked> Enable OTP Verification
+                    </label>
+                </div>
+                <button class="btn btn-primary">Save Settings</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

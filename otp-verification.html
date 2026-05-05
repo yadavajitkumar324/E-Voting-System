@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - SecureVote</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <div class="logo-icon-large">📧</div>
+                <h1>Verify Your Email</h1>
+                <p>Enter the OTP sent to your email</p>
+            </div>
+
+            <form class="auth-form" id="otpForm">
+                <div class="otp-container">
+                    <input type="text" class="otp-input" maxlength="1" placeholder="0">
+                    <input type="text" class="otp-input" maxlength="1" placeholder="0">
+                    <input type="text" class="otp-input" maxlength="1" placeholder="0">
+                    <input type="text" class="otp-input" maxlength="1" placeholder="0">
+                    <input type="text" class="otp-input" maxlength="1" placeholder="0">
+                    <input type="text" class="otp-input" maxlength="1" placeholder="0">
+                </div>
+
+                <div class="otp-info">
+                    <p>Didn't receive the code? 
+                        <button type="button" id="resendBtn" class="resend-btn">Resend in <span id="timer">60</span>s</button>
+                    </p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">Verify OTP</button>
+            </form>
+
+            <div class="auth-footer">
+                <a href="login.html">Back to Login</a>
+            </div>
+        </div>
+
+        <div class="auth-animation">
+            <div class="animated-gradient"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
