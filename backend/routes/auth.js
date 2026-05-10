@@ -8,7 +8,7 @@ const generateJWT = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET || 'secret', { expiresIn: '24h' });
 };
 
-// Register
+// Register - OTP nahi, seedha register
 router.post('/register', async (req, res) => {
   try {
     const { firstName, lastName, email, phone, password } = req.body;
@@ -62,6 +62,15 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+});
+
+// OTP routes (dummy - frontend ke liye)
+router.post('/verify-otp', (req, res) => {
+  res.json({ message: 'Verified!', success: true });
+});
+
+router.post('/verify-login-otp', (req, res) => {
+  res.json({ message: 'Verified!', success: true });
 });
 
 export default router;
