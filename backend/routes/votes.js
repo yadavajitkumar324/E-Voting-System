@@ -1,96 +1,85 @@
 import express from 'express';
-import { v4 as uuidv4 } from 'uuid';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import Candidate from '../models/Candidate.js';
 
 const router = express.Router();
 
-// In-memory storage
-const votes = new Map();
-const userVotes = new Map(); // Track which users have voted
-
-const candidates = {
-  alex: { id: 'alex', name: 'Alex Johnson', party: 'Democratic Party', votes: 0 },
-  sarah: { id: 'sarah', name: 'Sarah Williams', party: 'Republican Party', votes: 0 },
-  michael: { id: 'michael', name: 'Michael Chen', party: 'Independent', votes: 0 },
-  emma: { id: 'emma', name: 'Emma Rodriguez', party: 'Green Party', votes: 0 }
+// Auth middleware
+const auth = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Login karo pehle!' });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+    req.userId = decoded.userId;
+    next();
+  } catch {
+    res.status(401).json({ message: 'Invalid token!' });
+  }
 };
 
-// Cast Vote
-router.post('/cast', (req, res) => {
-  try {
-    const { userId, candidateId } = req.body;
-
-    if (!userId || !candidateId) {
-      return res.status(400).json({ message: 'User ID and Candidate ID required' });
-    }
-
-    // Check if user already voted
-    if (userVotes.has(userId)) {
-      return res.status(400).json({ message: 'You have already voted' });
-    }
-
-    if (!candidates[candidateId]) {
-      return res.status(400).json({ message: 'Invalid candidate' });
-    }
-
-    const voteId = uuidv4();
-    const vote = {
-      id: voteId,
-      userId,
-      candidateId,
-      timestamp: new Date(),
-      confirmed: true
-    };
-
-    votes.set(voteId, vote);
-    userVotes.set(userId, voteId);
-    candidates[candidateId].votes++;
-
-    res.json({ 
-      message: 'Vote cast successfully',
-      voteId,
-      candidate: candidates[candidateId].name
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
 // Get All Candidates
-router.get('/candidates', (req, res) => {
+router.get('/candidates', auth, async (req, res) => {
   try {
-    const candidateList = Object.values(candidates);
-    res.json(candidateList);
+    const candidates = await Candidate.find().sort({ votes: -1 });
+    res.json(candidates);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Get Vote Stats
-router.get('/stats', (req, res) => {
+// Cast Vote
+router.post('/cast', auth, async (req, res) => {
   try {
-    const totalVotes = Array.from(votes.values()).length;
-    const stats = Object.values(candidates).map(c => ({
-      id: c.id,
+    const { candidateId } = req.body;
+    const user = await User.findById(req.userId);
+
+    if (user.hasVoted) {
+      return res.status(400).json({ message: 'Tum pehle hi vote de chuke ho!' });
+    }
+
+    const candidate = await Candidate.findById(candidateId);
+    if (!candidate) {
+      return res.status(404).json({ message: 'Candidate nahi mila!' });
+    }
+
+    candidate.votes += 1;
+    await candidate.save();
+
+    user.hasVoted = true;
+    user.votedFor = candidateId;
+    await user.save();
+
+    res.json({ message: `${candidate.name} ko vote de diya! ✅` });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get Stats
+router.get('/stats', auth, async (req, res) => {
+  try {
+    const candidates = await Candidate.find().sort({ votes: -1 });
+    const totalVotes = candidates.reduce((sum, c) => sum + c.votes, 0);
+    const stats = candidates.map(c => ({
+      id: c._id,
       name: c.name,
+      party: c.party,
+      symbol: c.symbol,
       votes: c.votes,
       percentage: totalVotes > 0 ? ((c.votes / totalVotes) * 100).toFixed(2) : 0
     }));
-
-    res.json({
-      totalVotes,
-      candidates: stats
-    });
+    res.json({ totalVotes, candidates: stats });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Check if user has voted
-router.get('/check-voted/:userId', (req, res) => {
+// Check voted
+router.get('/check-voted', auth, async (req, res) => {
   try {
-    const { userId } = req.params;
-    const hasVoted = userVotes.has(userId);
-    res.json({ hasVoted });
+    const user = await User.findById(req.userId);
+    res.json({ hasVoted: user.hasVoted });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
